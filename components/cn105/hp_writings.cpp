@@ -352,8 +352,6 @@ void CN105Climate::createInfoPacket(uint8_t* packet, uint8_t packetType) {
 
 void CN105Climate::sendRemoteTemperature() {
 
-    this->shouldSendExternalTemperature_ = false;
-
     uint8_t packet[PACKET_LEN] = {};
 
     prepareSetPacket(packet, PACKET_LEN);

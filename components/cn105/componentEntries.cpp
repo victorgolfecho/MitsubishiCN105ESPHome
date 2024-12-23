@@ -49,6 +49,13 @@ void CN105Climate::loop() {
                 this->loopCycle.checkTimeout(this->update_interval_);
             } else { // we are not running a cycle
                 if (this->loopCycle.hasUpdateIntervalPassed(this->get_update_interval())) {
+
+                    ESP_LOGI("VICTOR", "interval has passed");
+
+                    // if we are running with a remote temperature, then send it every cycle
+                    if (this->shouldSendExternalTemperature_) {
+                        this->sendRemoteTemperature();
+                    }
                     this->buildAndSendRequestsInfoPackets();            // initiate an update cycle with this->cycleStarted();
                 }
             }
@@ -66,7 +73,7 @@ void CN105Climate::set_update_interval(uint32_t update_interval) {
 }
 
 void CN105Climate::set_remote_temperature(float setting) {
-    this->shouldSendExternalTemperature_ = true;
+    this->shouldSendExternalTemperature_ = (setting > 0);
     this->remoteTemperature_ = setting;
     ESP_LOGD(LOG_SETTINGS_TAG, "setting remote temperature to %f", this->remoteTemperature_);
 }
